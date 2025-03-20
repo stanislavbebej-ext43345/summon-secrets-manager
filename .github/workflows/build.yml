@@ -1,0 +1,72 @@
+name: Build
+
+on:
+  pull_request:
+    branches: main
+    paths:
+      - go.*
+      - main.go
+  push:
+    branches: main
+    paths:
+      - go.*
+      - main.go
+    tags:
+      - v[0-9]+.[0-9]+.[0-9]+
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  BINARY_NAME: summon-secrets-manager
+  BWS_ACCESS_TOKEN: ${{ secrets.BWS_ACCESS_TOKEN }}
+  CC: musl-gcc
+  CGO_ENABLED: 1
+
+jobs:
+  build:
+    runs-on:
+      - ubuntu-22.04
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Install musl
+      run: |
+        sudo apt update
+        sudo apt -y install musl-tools
+
+    - name: Setup Go
+      uses: actions/setup-go@v5
+      with:
+        go-version-file: go.mod
+
+    - name: Test
+      run: |
+        go test -v
+
+    - name: Build
+      run: |
+        ARCH=('amd64')
+        OS=('linux' 'windows' 'darwin')
+
+        for GOARCH in "${ARCH[@]}"; do
+          for GOOS in "${OS[@]}"; do
+            ARTIFACT_NAME="${BINARY_NAME}-${GOOS}-${GOARCH}"
+            [[ "$GOOS" == "windows" ]] && ARTIFACT_NAME="${ARTIFACT_NAME}.exe"
+
+            # Build
+            echo "- building artifact: $ARTIFACT_NAME"
+            go build -ldflags '-linkmode external -extldflags "-static -Wl,-unresolved-symbols=ignore-all"' -o $ARTIFACT_NAME
+            strip $ARTIFACT_NAME
+
+            # Release
+            if [[ "$GITHUB_REF_TYPE" == "tag" ]]; then
+              echo "- uploading artifact: $ARTIFACT_NAME"
+              gh release upload $GITHUB_REF_NAME $ARTIFACT_NAME --clobber
+            fi
+          done
+        done
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
