@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	BUILD_VERSION = "0.2.0" // x-release-please-version
+	BUILD_VERSION = "0.2.1" // x-release-please-version
 
 	DEFAULT_BWS_API_URL      = "https://api.bitwarden.eu"
 	DEFAULT_BWS_IDENTITY_URL = "https://identity.bitwarden.eu"
