@@ -25,4 +25,5 @@ go.work.sum
 .env
 
 # custom
+*.sh
 summon-secrets-manager*
