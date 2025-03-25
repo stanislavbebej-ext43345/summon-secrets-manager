@@ -38,7 +38,7 @@ USERNAME_VARIABLE: !var acd2d25f-1fd2-4604-9a6e-b2a600f71a31:Key
 ```bash
 export BWS_ACCESS_TOKEN='***'
 
-summon -p summon-keepass printenv
+summon -p summon-secrets-manager printenv
 ```
 
 Supported fields (case-insensitive):
