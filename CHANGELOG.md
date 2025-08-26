@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.1](https://github.com/stanislavbebej-ext43345/summon-secrets-manager/compare/v0.3.0...v0.3.1) (2025-08-26)
+
+
+### Bug Fixes
+
+* **deps:** bump actions/checkout from 4 to 5 in the actions-deps group ([09e66a2](https://github.com/stanislavbebej-ext43345/summon-secrets-manager/commit/09e66a2902d342d07368bb18a30cb3ec0b23bb67))
+
 ## [0.3.0](https://github.com/stanislavbebej-ext43345/summon-secrets-manager/compare/v0.2.1...v0.3.0) (2025-03-25)
 
 
