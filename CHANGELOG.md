@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.4.0](https://github.com/stanislavbebej-ext43345/summon-secrets-manager/compare/v0.3.1...v0.4.0) (2025-09-26)
+
+
+### Features
+
+* add aarch64 architecture builds ([4633ff7](https://github.com/stanislavbebej-ext43345/summon-secrets-manager/commit/4633ff74a0fe5c69422e0d682c0dbd1196144f7b))
+
+
+### Bug Fixes
+
+* **deps:** bump actions/setup-go from 5 to 6 in the actions-deps group ([20ecb6a](https://github.com/stanislavbebej-ext43345/summon-secrets-manager/commit/20ecb6ac23e438855477066d2bcedd7d7400a590))
+
 ## [0.3.1](https://github.com/stanislavbebej-ext43345/summon-secrets-manager/compare/v0.3.0...v0.3.1) (2025-08-26)
 
 
