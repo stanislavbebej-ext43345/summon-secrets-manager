@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.1](https://github.com/stanislavbebej-ext43345/summon-secrets-manager/compare/v0.4.0...v0.4.1) (2025-09-26)
+
+
+### Bug Fixes
+
+* add build attestations ([3c5ae24](https://github.com/stanislavbebej-ext43345/summon-secrets-manager/commit/3c5ae24842137688d0c8ad615cdfad89267b8d17))
+
 ## [0.4.0](https://github.com/stanislavbebej-ext43345/summon-secrets-manager/compare/v0.3.1...v0.4.0) (2025-09-26)
 
 
