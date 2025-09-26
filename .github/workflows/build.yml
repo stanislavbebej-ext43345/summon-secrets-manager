@@ -2,15 +2,19 @@ name: Build
 
 on:
   pull_request:
-    branches: main
+    branches:
+      - main
     paths:
       - go.*
       - main.go
   push:
-    branches: main
+    branches:
+      - main
     tags:
       - v[0-9]+.[0-9]+.[0-9]+
   workflow_dispatch:
+
+concurrency: ci-${{ github.workflow }}-${{ github.ref }}
 
 permissions:
   contents: write
@@ -19,12 +23,16 @@ env:
   BINARY_NAME: summon-secrets-manager
   BWS_ACCESS_TOKEN: ${{ secrets.BWS_ACCESS_TOKEN }}
   CC: musl-gcc
+  # CC: x86_64-unknown-linux-musl-cc
   CGO_ENABLED: 1
+
+  # https://github.com/bitwarden/sdk-go/blob/main/INSTRUCTIONS.md#build
+  LDFLAGS: '-linkmode external -extldflags "-static -Wl,-unresolved-symbols=ignore-all" -s -w'
 
 jobs:
   build:
     runs-on:
-      - ubuntu-22.04
+      - ubuntu-latest
     steps:
     - name: Checkout
       uses: actions/checkout@v5
@@ -35,16 +43,19 @@ jobs:
         sudo apt -y install musl-tools
 
         # Install cross-compilation toolchain with musl libc
-        BINS=('x86_64-w64-mingw32')
+        declare -A binary
+
+        binary['aarch64-unknown-linux-musl']="20250911"
+        # binary['x86_64-unknown-linux-musl']="20250911"
+        binary['x86_64-w64-mingw32']="20250206"
 
         mkdir -p $XTOOLS
-
-        for BINARY in "${BINS[@]}"; do
-          wget -nv -O - https://github.com/musl-cross/musl-cross/releases/download/${VERSION}/${BINARY}.tar.xz | tar -Jxf - -C $XTOOLS
-          echo "/opt/x-tools/${BINARY}/bin" >>$GITHUB_PATH
+        for name in "${!binary[@]}"; do
+          version=$"${binary[$name]}"
+          wget -nv -O - https://github.com/musl-cross/musl-cross/releases/download/${version}/${name}.tar.xz | tar -Jxf - -C $XTOOLS
+          echo "${XTOOLS}/${name}/bin" >>$GITHUB_PATH
         done
       env:
-        VERSION: 20250206
         XTOOLS: /opt/x-tools
 
     - name: Setup Go
@@ -54,28 +65,33 @@ jobs:
 
     - name: Test
       run: |
-        go test -v
+        go test -v -ldflags "$LDFLAGS"
 
     - name: Build
       run: |
-        ARCH=('amd64')
+        ARCH=('amd64' 'arm64')
         OS=('linux' 'windows')
 
         for GOARCH in "${ARCH[@]}"; do
+          [[ "$GOARCH" == "arm64" ]] && export CC="aarch64-unknown-linux-musl-cc"
+
           for GOOS in "${OS[@]}"; do
             export GOARCH
             export GOOS
 
             ARTIFACT_NAME="${BINARY_NAME}-${GOOS}-${GOARCH}"
+
             if [[ "$GOOS" == "windows" ]]; then
               ARTIFACT_NAME="${ARTIFACT_NAME}.exe"
-              export CC=x86_64-w64-mingw32-cc
+              export CC="x86_64-w64-mingw32-cc"
+
+              # Skip ARM build for Windows
+              [[ "$GOARCH" == "arm64" ]] && continue
             fi
 
             # Build
             echo "- building artifact: $ARTIFACT_NAME"
-            go build -ldflags '-linkmode external -extldflags "-static -Wl,-unresolved-symbols=ignore-all"' -o $ARTIFACT_NAME
-            strip $ARTIFACT_NAME
+            go build -ldflags "$LDFLAGS" -o $ARTIFACT_NAME
 
             # Release
             if [[ "$GITHUB_REF_TYPE" == "tag" ]]; then
