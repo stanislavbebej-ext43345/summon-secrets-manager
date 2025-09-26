@@ -1,5 +1,6 @@
 [![Build](https://github.com/stanislavbebej-ext43345/summon-secrets-manager/actions/workflows/build.yml/badge.svg)](.github/workflows/build.yml)
 [![dependabot](https://img.shields.io/badge/Dependabot-enabled-brightgreen?logo=dependabot)](.github/dependabot.yml)
+[![editorconfig](https://img.shields.io/badge/EditorConfig-enabled-brightgreen?logo=editorconfig)](.editorconfig)
 [![release-please](https://img.shields.io/badge/release--please-enabled-brightgreen?logo=google)](release-please-config.json)
 
 # summon-secrets-manager
@@ -14,10 +15,10 @@ export BINARY_NAME="summon-secrets-manager"
 go env -w CGO_ENABLED=1
 go env -w CC=musl-gcc
 
-go build -ldflags '-linkmode external -extldflags "-static -Wl,-unresolved-symbols=ignore-all"' -o $BINARY_NAME
-strip $BINARY_NAME
+go build -ldflags '-linkmode external -extldflags "-static -Wl,-unresolved-symbols=ignore-all" -s -w' -o $BINARY_NAME
 upx -q -9 $BINARY_NAME
-sudo cp $BINARY_NAME /usr/local/bin/Providers
+
+sudo cp $BINARY_NAME /usr/local/lib/summon
 ```
 
 ## Usage

@@ -17,7 +17,9 @@ on:
 concurrency: ci-${{ github.workflow }}-${{ github.ref }}
 
 permissions:
+  attestations: write
   contents: write
+  id-token: write
 
 env:
   BINARY_NAME: summon-secrets-manager
@@ -102,3 +104,9 @@ jobs:
         done
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Attestation
+      continue-on-error: true
+      uses: actions/attest-build-provenance@v3
+      with:
+        subject-path: ${{ env.BINARY_NAME }}-*
