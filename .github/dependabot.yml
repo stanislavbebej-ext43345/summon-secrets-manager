@@ -6,7 +6,7 @@ updates:
     schedule:
       interval: monthly
     commit-message:
-      prefix: fix(deps)
+      prefix: ci(deps)
     groups:
       actions-deps:
         patterns:
