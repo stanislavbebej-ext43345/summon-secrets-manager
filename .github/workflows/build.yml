@@ -38,6 +38,8 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v6
+      with:
+        fetch-depth: 0
 
     - name: Install musl
       run: |
@@ -67,7 +69,12 @@ jobs:
 
     - name: Test
       run: |
-        go test -v -ldflags "$LDFLAGS"
+        go test -ldflags "$LDFLAGS" -coverprofile=coverage.out -json >report.json
+
+    - name: SonarQube Scan
+      uses: SonarSource/sonarqube-scan-action@v6
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
     - name: Build
       run: |
