@@ -1,7 +1,5 @@
 module github.com/stanislavbebej-ext43345/summon-secrets-manager
 
-go 1.24.0
+go 1.27.1
 
-toolchain go1.24.6
-
-require github.com/bitwarden/sdk-go v1.0.2
+require github.com/bitwarden/sdk-go/v2 v2.1.0

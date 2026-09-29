@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/bitwarden/sdk-go"
+	"github.com/bitwarden/sdk-go/v2"
 )
 
 const (

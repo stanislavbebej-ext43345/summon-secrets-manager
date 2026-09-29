@@ -7,7 +7,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/bitwarden/sdk-go"
+	"github.com/bitwarden/sdk-go/v2"
 )
 
 var (

@@ -49,8 +49,9 @@ jobs:
         # Install cross-compilation toolchain with musl libc
         declare -A binary
 
-        binary['aarch64-unknown-linux-musl']="20250911"
-        # binary['x86_64-unknown-linux-musl']="20250911"
+        # binary['arm-unknown-linux-musleabihf']="20260823"
+        # binary['x86_64-unknown-linux-musl']="20260823"
+        binary['aarch64-unknown-linux-musl']="20260823"
         binary['x86_64-w64-mingw32']="20250206"
 
         mkdir -p $XTOOLS
@@ -78,11 +79,17 @@ jobs:
 
     - name: Build
       run: |
+        # ARCH=('amd64' 'arm64' 'arm')
         ARCH=('amd64' 'arm64')
         OS=('linux' 'windows')
 
         for GOARCH in "${ARCH[@]}"; do
           [[ "$GOARCH" == "arm64" ]] && export CC="aarch64-unknown-linux-musl-cc"
+
+          if [[ "$GOARCH" == "arm" ]]; then
+            export CC="arm-unknown-linux-musleabihf-cc"
+            export GOARM=6
+          fi
 
           for GOOS in "${OS[@]}"; do
             export GOARCH
@@ -94,8 +101,8 @@ jobs:
               ARTIFACT_NAME="${ARTIFACT_NAME}.exe"
               export CC="x86_64-w64-mingw32-cc"
 
-              # Skip ARM build for Windows
-              [[ "$GOARCH" == "arm64" ]] && continue
+              # Skip ARM builds for Windows
+              [[ "$GOARCH" == "arm"* ]] && continue
             fi
 
             # Build
