@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.0.0](https://github.com/stanislavbebej-ext43345/summon-secrets-manager/compare/v0.4.1...v1.0.0) (2026-09-29)
+
+
+### ⚠ BREAKING CHANGES
+
+* **deps:** upgrade SDK and Go
+
+### Bug Fixes
+
+* **deps:** upgrade SDK and Go ([1c2dadc](https://github.com/stanislavbebej-ext43345/summon-secrets-manager/commit/1c2dadcf0dd7629d98707dc9f70a0fe4cadeaf44))
+
 ## [0.4.1](https://github.com/stanislavbebej-ext43345/summon-secrets-manager/compare/v0.4.0...v0.4.1) (2025-09-26)
 
 
